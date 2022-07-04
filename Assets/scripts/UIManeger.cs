@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class UIManeger : MonoBehaviour
 {
+    public Image FiilRateImage;
+    public GameObject player;
+    public GameObject fnishline;
     public Text coin_text;
     public bool radialshine;
     //butonlar
@@ -35,17 +38,29 @@ public class UIManeger : MonoBehaviour
     public GameObject btn_no;
     public GameObject coinbackeffect;
 
+    public GameObject achivedcoin;
+    public GameObject nextlevel;
+    public Text achivedtext;
+
     public void finishscreenn()
     {
         StartCoroutine("finishlaunch");
     }
     public void Update()
     {
-        if (radialshine==true)
+        if (radialshine == true)
         {
             coinbackeffect.GetComponent<RectTransform>().Rotate(new Vector3(0, 0, 10f * Time.deltaTime));
         }
+
+
+        FiilRateImage.fillAmount = (player.transform.position.z) / (fnishline.transform.position.z);
     }
+
+
+
+
+
     public IEnumerator finishlaunch()
     {
         Time.timeScale = 0.3f;
@@ -65,9 +80,34 @@ public class UIManeger : MonoBehaviour
 
 
     }
+    public IEnumerator afterrewardButton()
+    {
+        achivedcoin.SetActive(true);
+        achivedtext.gameObject.SetActive(true);
+        btn_claim.SetActive(false);
+        btn_no.SetActive(false);
+        for (int i = 0; i < 401; i += 4)
+        {
+            achivedtext.text = "+" + i.ToString();
+            yield return new WaitForSecondsRealtime(0.0001f);
+
+        }
+      
+        yield return new WaitForSecondsRealtime(0.8f);
+        nextlevel.SetActive(true);
+      
+
+    }
+
     public void restartbutonactive()
     {
         restartscreen.SetActive(true);
+    }
+    public void nextscane()
+    {
+        Variables.fistouch = 0;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void scanerestart()
     {
@@ -124,18 +164,18 @@ public class UIManeger : MonoBehaviour
     }
     public void layoutsettingsopen()
     {
-        
+
         seton.SetActive(false);
         setof.SetActive(true);
         Layoutanimator.SetTrigger("slide_in");
         if (PlayerPrefs.GetInt("Sounds") == 1)
         {
-            
+
             soundon.SetActive(true);
             soundoff.SetActive(false);
             AudioListener.volume = 1;
         }
-        else if(PlayerPrefs.GetInt("Sounds") == 2) 
+        else if (PlayerPrefs.GetInt("Sounds") == 2)
         {
             soundon.SetActive(false);
             soundoff.SetActive(true);
@@ -144,7 +184,7 @@ public class UIManeger : MonoBehaviour
     }
     public void layoutsettingsclose()
     {
-       
+
         seton.SetActive(true);
         setof.SetActive(false);
         Layoutanimator.SetTrigger("slide_out");
@@ -152,7 +192,7 @@ public class UIManeger : MonoBehaviour
     public IEnumerator whiteffect()
     {
         whiteeffectimage.gameObject.SetActive(true);
-        while (effectcontrol==0)
+        while (effectcontrol == 0)
         {
             yield return new WaitForSeconds(0.01f);
             whiteeffectimage.color += new Color(0, 0, 0, 0.01f);
@@ -183,7 +223,7 @@ public class UIManeger : MonoBehaviour
         soundon.SetActive(false);
         soundoff.SetActive(true);
         AudioListener.volume = 0;
-        PlayerPrefs.SetInt("Sounds",2);
+        PlayerPrefs.SetInt("Sounds", 2);
 
 
     }
@@ -196,7 +236,7 @@ public class UIManeger : MonoBehaviour
 
     }
 
-     public void vib__on()
+    public void vib__on()
     {
         vibon.SetActive(false);
         viboff.SetActive(true);
@@ -206,5 +246,6 @@ public class UIManeger : MonoBehaviour
         vibon.SetActive(true);
         viboff.SetActive(false);
     }
-   
+
 }
+
